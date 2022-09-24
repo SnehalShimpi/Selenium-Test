@@ -1,0 +1,71 @@
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using System;
+using System.Diagnostics;
+using System.Threading;
+using NUnit.Framework;
+
+
+namespace Selenium_Test
+{
+    class SeleniumTest
+    {
+        //create the reference for the browser  
+        IWebDriver driver = new ChromeDriver();
+        private String expectedText = "";
+        String actualText = "";
+
+        [SetUp]
+        public void Initialize()
+        {
+            // navigate to URL  
+            driver.Navigate().GoToUrl("https://www.liberis.com/");
+            driver.Manage().Window.Maximize();
+            Thread.Sleep(2000);
+          
+        }
+
+        [Test]
+        public void ExecuteTest()
+        {
+            //Click on Get Demo button
+            IWebElement ele1 =
+                driver.FindElement(By.XPath("//*[@id='site-inner-wrapper']/main/div[1]/div/div[2]/div/div/div/a"));
+            ele1.Click();
+            Thread.Sleep(3000);
+            
+            //Verify page landed on correct URL
+            expectedText = "https://www.liberis.com/become-a-partner";
+            actualText = driver.Url;
+            Console.Write(actualText);
+            Debug.Assert(expectedText == actualText, "Verify page title");
+
+            //verify if an element is present on page 
+            Boolean broker = driver.FindElement(By.XPath("//*[@id=\"I'm a Broker\"]")).Enabled;
+            Debug.Assert(broker, "I am broker option is enable");
+            
+            Boolean iso = driver.FindElement(By.XPath("//*[@id=\"I'm an ISO\"]")).Enabled;
+            Debug.Assert(iso, "I am ISO option is enable");
+
+            Boolean strategic = driver.FindElement(By.XPath("//*[@id=\"I'm a Strategic Partner\"]")).Enabled;
+            Debug.Assert(strategic, "'m a Strategic Partner is enable");
+
+            //click get demo button without selecting any partner
+            IWebElement getDemo =
+                driver.FindElement(By.XPath("//*[@id='site-inner-wrapper']/main/section/div[2]/div/div[2]/div/a"));
+            getDemo.Click();
+            Thread.Sleep(3000);
+            
+            //verify error message if partner is not selected
+            String expected = "Please select a type of partner";
+            string actual = driver.FindElement(By.ClassName("ph-error-inner")).Text;
+            Debug.Assert(expected == actual, "Verify Error Message if not partner is selected");
+        }
+
+        [TearDown]
+        public void EndTest()
+        {
+            driver.Close();
+        }
+    }
+}

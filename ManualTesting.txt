@@ -1,0 +1,10 @@
+Manual Testing for Liberis web page
+
+Given : Load Liberis web page 
+When  :	click on Get Demo button
+Then  : validate Page title and 3 options on page
+
+Given : Load Get Demo web page
+When  : Click on Get Demo without selecting any option
+Then  : verify error message
+
